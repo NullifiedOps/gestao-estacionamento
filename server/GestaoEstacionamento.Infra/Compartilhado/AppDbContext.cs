@@ -1,5 +1,6 @@
 ﻿using GestaoEstacionamento.Core.Dominio.Compartilhado;
 using GestaoEstacionamento.Core.Dominio.ModuloAutenticacao;
+using GestaoEstacionamento.Core.Dominio.ModuloVeiculo;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,14 +9,14 @@ namespace GestaoEstacionamento.Infra.Orm.Compartilhado;
 public class AppDbContext(DbContextOptions options, ITenantProvider? tenantProvider = null) :
     IdentityDbContext<Usuario, Cargo, Guid>(options), IUnitOfWork
 {
-    //public DbSet<YYYY> Contatos { get; set; }
+    public DbSet<Veiculo> Veiculos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         if (tenantProvider is not null)
         {
-            //modelBuilder.Entity<YYYY>()
-            //    .HasQueryFilter(x => x.UsuarioId.Equals(tenantProvider.UsuarioId));
+            modelBuilder.Entity<Veiculo>()
+                .HasQueryFilter(x => x.UsuarioId.Equals(tenantProvider.UsuarioId));
         }
 
         var assembly = typeof(AppDbContext).Assembly;
