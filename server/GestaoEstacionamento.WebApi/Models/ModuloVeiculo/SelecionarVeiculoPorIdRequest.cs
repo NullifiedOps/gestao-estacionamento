@@ -10,5 +10,6 @@ public record SelecionarVeiculoPorIdResponse(
     string? Detalhes,
     string Nome,
     string Cpf,
-    string Telefone
+    string Telefone,
+    int NumeroTicket
 );

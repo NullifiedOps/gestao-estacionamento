@@ -10,4 +10,4 @@ public record CadastrarVeiculoRequest(
     string Telefone
 );
 
-public record CadastrarVeiculoResponse(Guid Id);
+public record CadastrarVeiculoResponse(Guid Id, int numeroTicket);

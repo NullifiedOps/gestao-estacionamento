@@ -37,8 +37,8 @@ public class EditarVeiculoCommandHandler(
 
         var registros = await repositorioVeiculo.SelecionarRegistrosAsync();
 
-        if (registros.Any(i => i.Nome.Equals(command.Cpf)))
-            return Result.Fail(ResultadosErro.RegistroDuplicadoErro("Já existe um carro registrado com este CPF."));
+        if (registros.Any(i => i.Placa.Equals(command.Placa)))
+            return Result.Fail(ResultadosErro.RegistroDuplicadoErro("Já existe um carro registrado com esta placa."));
         
         try
         {

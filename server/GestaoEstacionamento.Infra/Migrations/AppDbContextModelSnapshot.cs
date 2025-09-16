@@ -118,6 +118,37 @@ namespace GestaoEstacionamento.Infra.Orm.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("GestaoEstacionamento.Core.Dominio.ModuloVeiculo.Ticket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DataEntrada")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DataSaida")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Numero")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("VeiculoId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("VeiculoId")
+                        .IsUnique();
+
+                    b.ToTable("Tickets");
+                });
+
             modelBuilder.Entity("GestaoEstacionamento.Core.Dominio.ModuloVeiculo.Veiculo", b =>
                 {
                     b.Property<Guid>("Id")
@@ -265,6 +296,17 @@ namespace GestaoEstacionamento.Infra.Orm.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("GestaoEstacionamento.Core.Dominio.ModuloVeiculo.Ticket", b =>
+                {
+                    b.HasOne("GestaoEstacionamento.Core.Dominio.ModuloVeiculo.Veiculo", "Veiculo")
+                        .WithOne("Ticket")
+                        .HasForeignKey("GestaoEstacionamento.Core.Dominio.ModuloVeiculo.Ticket", "VeiculoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Veiculo");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("GestaoEstacionamento.Core.Dominio.ModuloAutenticacao.Cargo", null)
@@ -313,6 +355,12 @@ namespace GestaoEstacionamento.Infra.Orm.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GestaoEstacionamento.Core.Dominio.ModuloVeiculo.Veiculo", b =>
+                {
+                    b.Navigation("Ticket")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GestaoEstacionamento.Infra.Orm.Migrations
 {
     /// <inheritdoc />
-    public partial class Add_Veiculo : Migration
+    public partial class Config : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -177,6 +177,28 @@ namespace GestaoEstacionamento.Infra.Orm.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Tickets",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Numero = table.Column<int>(type: "integer", nullable: false),
+                    VeiculoId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DataEntrada = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DataSaida = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UsuarioId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tickets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tickets_Veiculos_VeiculoId",
+                        column: x => x.VeiculoId,
+                        principalTable: "Veiculos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -215,6 +237,18 @@ namespace GestaoEstacionamento.Infra.Orm.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Tickets_Id",
+                table: "Tickets",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tickets_VeiculoId",
+                table: "Tickets",
+                column: "VeiculoId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Veiculos_Id",
                 table: "Veiculos",
                 column: "Id",
@@ -240,13 +274,16 @@ namespace GestaoEstacionamento.Infra.Orm.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Veiculos");
+                name: "Tickets");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Veiculos");
         }
     }
 }

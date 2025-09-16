@@ -50,7 +50,8 @@ public class VeiculoModelsMappingProfile : Profile
                 src.Detalhes,
                 src.Nome,
                 src.Cpf,
-                src.Telefone
+                src.Telefone,
+                src.NumeroTicket
             ));
     }
 }

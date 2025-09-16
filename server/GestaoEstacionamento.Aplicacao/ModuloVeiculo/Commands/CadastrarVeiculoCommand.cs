@@ -13,4 +13,4 @@ public record CadastrarVeiculoCommand(
     string Telefone
     ) : IRequest<Result<CadastrarVeiculoResult>>;
 
-public record CadastrarVeiculoResult(Guid Id);
+public record CadastrarVeiculoResult(Guid Id, int NumeroTicket);

@@ -17,5 +17,6 @@ public record SelecionarVeiculosDto(
     string? Detalhes,
     string Nome,
     string Cpf,
-    string Telefone
+    string Telefone,
+    int NumeroTicket
 );

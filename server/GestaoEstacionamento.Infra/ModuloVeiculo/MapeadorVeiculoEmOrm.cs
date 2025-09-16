@@ -33,6 +33,11 @@ public class MapeadorVeiculoEmOrm : IEntityTypeConfiguration<Veiculo>
         builder.Property(x => x.Telefone)
             .IsRequired();
 
+        builder.HasOne(x => x.Ticket)
+            .WithOne(x => x.Veiculo)
+            .HasForeignKey<Ticket>(t => t.VeiculoId)
+            .IsRequired();
+
         builder.HasIndex(x => x.Id)
             .IsUnique();
     }

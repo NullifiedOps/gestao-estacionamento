@@ -11,6 +11,7 @@ public class Veiculo : EntidadeBase<Veiculo>
     public string Nome { get; set; }
     public string Cpf { get; set; }
     public string Telefone { get; set; }
+    public Ticket Ticket { get; set; }
 
     public Veiculo() { }
 
@@ -21,7 +22,8 @@ public class Veiculo : EntidadeBase<Veiculo>
         string? detalhes, 
         string nome, 
         string cpf, 
-        string telefone) : this()
+        string telefone,
+        int numeroTicket) : this()
     {
         Placa = placa;
         Modelo = modelo;
@@ -30,6 +32,7 @@ public class Veiculo : EntidadeBase<Veiculo>
         Nome = nome;
         Cpf = cpf;
         Telefone = telefone;
+        Ticket = new Ticket(this, numeroTicket);
     }
 
     public override void AtualizarRegistro(Veiculo registroEditado)

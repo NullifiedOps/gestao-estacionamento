@@ -38,12 +38,17 @@ public class CadastrarVeiculoCommandHandler(
 
         var registros = await repositorioVeiculo.SelecionarRegistrosAsync();
 
-        if (registros.Any(i => i.Nome.Equals(command.Cpf)))
-            return Result.Fail(ResultadosErro.RegistroDuplicadoErro("Já existe um carro registrado com este CPF."));
+        if (registros.Any(i => i.Placa.Equals(command.Placa)))
+            return Result.Fail(ResultadosErro.RegistroDuplicadoErro("Já existe um carro registrado com esta placa."));
 
         try
         {
-            var veiculo = mapper.Map<Veiculo>(command);
+            var ultimoTicket = registros.Where(v => v.Ticket != null)
+                .Select(v => v.Ticket.Numero).DefaultIfEmpty(0).Max();
+
+            var novoTicket = ultimoTicket + 1;
+
+            var veiculo = mapper.Map<Veiculo>((command, novoTicket));
 
             veiculo.UsuarioId = tenantProvider.UsuarioId.GetValueOrDefault();
 
