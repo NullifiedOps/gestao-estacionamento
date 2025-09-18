@@ -27,6 +27,9 @@ public class ExcluirVeiculoCommandHandler(
             if (veiculoSelecionado is null)
                 return Result.Fail(ResultadosErro.RegistroNaoEncontradoErro(command.Id));
 
+            if (!veiculoSelecionado.Ticket.Encerrado)
+                return Result.Fail(ResultadosErro.ExclusaoBloqueadaErro("Não foi possivel excluir o veiculo pois ainda contém um ticket aberto."));
+
             await repositorioVeiculo.ExcluirAsync(command.Id);
 
             await unitOfWork.CommitAsync();

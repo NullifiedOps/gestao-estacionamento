@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using GestaoEstacionamento.Core.Dominio.ModuloVeiculo;
 using GestaoEstacionamento.Infra.Orm.ModuloVeiculo;
+using GestaoEstacionamento.Core.Dominio.ModuloVaga;
+using GestaoEstacionamento.Infra.Orm.ModuloVaga;
 
 namespace GestaoEstacionamento.Infra.Orm;
 
@@ -13,6 +15,7 @@ public static class DependencyInjection
     public static IServiceCollection AddCamadaInfraestruturaOrm(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IRepositorioVeiculo, RepositorioVeiculoEmOrm>();
+        services.AddScoped<IRepositorioVaga, RepositorioVagaEmOrm>();
 
         services.AddEntityFrameworkConfig(configuration);
 

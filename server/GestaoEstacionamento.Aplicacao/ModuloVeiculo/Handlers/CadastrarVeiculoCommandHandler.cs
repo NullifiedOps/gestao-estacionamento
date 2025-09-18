@@ -51,6 +51,7 @@ public class CadastrarVeiculoCommandHandler(
             var veiculo = mapper.Map<Veiculo>((command, novoTicket));
 
             veiculo.UsuarioId = tenantProvider.UsuarioId.GetValueOrDefault();
+            veiculo.Ticket.UsuarioId = tenantProvider.UsuarioId.GetValueOrDefault();
 
             await repositorioVeiculo.CadastrarAsync(veiculo);
 
