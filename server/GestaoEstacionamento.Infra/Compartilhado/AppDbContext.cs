@@ -1,5 +1,6 @@
 ﻿using GestaoEstacionamento.Core.Dominio.Compartilhado;
 using GestaoEstacionamento.Core.Dominio.ModuloAutenticacao;
+using GestaoEstacionamento.Core.Dominio.ModuloVaga;
 using GestaoEstacionamento.Core.Dominio.ModuloVeiculo;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ public class AppDbContext(DbContextOptions options, ITenantProvider? tenantProvi
 {
     public DbSet<Veiculo> Veiculos { get; set; }
     public DbSet<Ticket> Tickets { get; set; }
+    public DbSet<Vaga> Vagas { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,7 +22,10 @@ public class AppDbContext(DbContextOptions options, ITenantProvider? tenantProvi
                 .HasQueryFilter(x => x.UsuarioId.Equals(tenantProvider.UsuarioId));
 
             modelBuilder.Entity<Ticket>()
-                .HasQueryFilter(x => x.Veiculo.UsuarioId.Equals(tenantProvider.UsuarioId));
+                .HasQueryFilter(x => x.UsuarioId.Equals(tenantProvider.UsuarioId));
+            
+            modelBuilder.Entity<Vaga>()
+                .HasQueryFilter(x => x.UsuarioId.Equals(tenantProvider.UsuarioId));
         }
 
         var assembly = typeof(AppDbContext).Assembly;

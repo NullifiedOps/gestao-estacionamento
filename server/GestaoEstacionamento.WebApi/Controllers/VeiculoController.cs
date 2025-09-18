@@ -62,7 +62,18 @@ public class VeiculoController(IMediator mediator, IMapper mapper) : ControllerB
         var result = await mediator.Send(command);
 
         if (result.IsFailed)
+        {
+            if (result.HasError(e => e.HasMetadata("TipoErro", m => m.Equals("ExclusaoBloqueada"))))
+            {
+                var errosDeValidacao = result.Errors
+                        .SelectMany(e => e.Reasons.OfType<IError>())
+                        .Select(e => e.Message);
+
+                return Conflict(errosDeValidacao);
+            }
+
             return BadRequest();
+        }
 
         return NoContent();
     }

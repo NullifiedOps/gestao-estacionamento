@@ -22,7 +22,7 @@ public class MapeadorVeiculoEmOrm : IEntityTypeConfiguration<Veiculo>
             .IsRequired();
 
         builder.Property(x => x.Detalhes)
-            .IsRequired();
+            .IsRequired(false);
 
         builder.Property(x => x.Nome)
             .IsRequired();
@@ -36,6 +36,7 @@ public class MapeadorVeiculoEmOrm : IEntityTypeConfiguration<Veiculo>
         builder.HasOne(x => x.Ticket)
             .WithOne(x => x.Veiculo)
             .HasForeignKey<Ticket>(t => t.VeiculoId)
+            .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
 
         builder.HasIndex(x => x.Id)

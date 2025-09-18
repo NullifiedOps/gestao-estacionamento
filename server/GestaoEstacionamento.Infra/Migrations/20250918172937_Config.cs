@@ -60,7 +60,7 @@ namespace GestaoEstacionamento.Infra.Orm.Migrations
                     Placa = table.Column<string>(type: "text", nullable: false),
                     Modelo = table.Column<string>(type: "text", nullable: false),
                     Cor = table.Column<string>(type: "text", nullable: false),
-                    Detalhes = table.Column<string>(type: "text", nullable: false),
+                    Detalhes = table.Column<string>(type: "text", nullable: true),
                     Nome = table.Column<string>(type: "text", nullable: false),
                     Cpf = table.Column<string>(type: "text", nullable: false),
                     Telefone = table.Column<string>(type: "text", nullable: false),
@@ -199,6 +199,26 @@ namespace GestaoEstacionamento.Infra.Orm.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Vagas",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Zona = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Identificador = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    VeiculoId = table.Column<Guid>(type: "uuid", nullable: true),
+                    UsuarioId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vagas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Vagas_Veiculos_VeiculoId",
+                        column: x => x.VeiculoId,
+                        principalTable: "Veiculos",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -249,6 +269,18 @@ namespace GestaoEstacionamento.Infra.Orm.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Vagas_Id",
+                table: "Vagas",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vagas_VeiculoId",
+                table: "Vagas",
+                column: "VeiculoId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Veiculos_Id",
                 table: "Veiculos",
                 column: "Id",
@@ -275,6 +307,9 @@ namespace GestaoEstacionamento.Infra.Orm.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tickets");
+
+            migrationBuilder.DropTable(
+                name: "Vagas");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

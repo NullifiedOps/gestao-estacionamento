@@ -21,6 +21,12 @@ public class MapeadorTicketEmOrm : IEntityTypeConfiguration<Ticket>
         builder.Property(x => x.DataSaida)
             .IsRequired(false);
 
+        builder.HasOne(x => x.Veiculo)
+            .WithOne(x => x.Ticket)
+            .HasForeignKey<Ticket>(t => t.VeiculoId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
+
         builder.HasIndex(x => x.Id)
             .IsUnique();
     }

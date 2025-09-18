@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GestaoEstacionamento.Infra.Orm.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250916184751_Config")]
+    [Migration("20250918172937_Config")]
     partial class Config
     {
         /// <inheritdoc />
@@ -121,6 +121,38 @@ namespace GestaoEstacionamento.Infra.Orm.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("GestaoEstacionamento.Core.Dominio.ModuloVaga.Vaga", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Identificador")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("VeiculoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Zona")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("VeiculoId")
+                        .IsUnique();
+
+                    b.ToTable("Vagas");
+                });
+
             modelBuilder.Entity("GestaoEstacionamento.Core.Dominio.ModuloVeiculo.Ticket", b =>
                 {
                     b.Property<Guid>("Id")
@@ -166,7 +198,6 @@ namespace GestaoEstacionamento.Infra.Orm.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Detalhes")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Modelo")
@@ -297,6 +328,15 @@ namespace GestaoEstacionamento.Infra.Orm.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("GestaoEstacionamento.Core.Dominio.ModuloVaga.Vaga", b =>
+                {
+                    b.HasOne("GestaoEstacionamento.Core.Dominio.ModuloVeiculo.Veiculo", "Veiculo")
+                        .WithOne()
+                        .HasForeignKey("GestaoEstacionamento.Core.Dominio.ModuloVaga.Vaga", "VeiculoId");
+
+                    b.Navigation("Veiculo");
                 });
 
             modelBuilder.Entity("GestaoEstacionamento.Core.Dominio.ModuloVeiculo.Ticket", b =>
