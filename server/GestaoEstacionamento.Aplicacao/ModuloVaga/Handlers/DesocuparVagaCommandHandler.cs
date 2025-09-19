@@ -4,33 +4,36 @@ using GestaoEstacionamento.Core.Aplicacao.ModuloVaga.Commands;
 using GestaoEstacionamento.Core.Dominio.Compartilhado;
 using GestaoEstacionamento.Core.Dominio.ModuloAutenticacao;
 using GestaoEstacionamento.Core.Dominio.ModuloVaga;
+using GestaoEstacionamento.Core.Dominio.ModuloVeiculo;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace GestaoEstacionamento.Core.Aplicacao.ModuloVaga.Handlers;
 
-public class ExcluirVagaCommandHandler(
+public class DesocuparVagaCommandHandler(
     IRepositorioVaga repositorioVaga,
     ITenantProvider tenantProvider,
     IUnitOfWork unitOfWork,
     IDistributedCache cache,
-    ILogger<ExcluirVagaCommandHandler> logger
-) : IRequestHandler<ExcluirVagaCommand, Result<ExcluirVagaResult>>
+    ILogger<DesocuparVagaCommand> logger
+    ) : IRequestHandler<DesocuparVagaCommand, Result<DesocuparVagaResult>>
 {
-    public async Task<Result<ExcluirVagaResult>> Handle(ExcluirVagaCommand command, CancellationToken cancellationToken)
+    public async Task<Result<DesocuparVagaResult>> Handle(DesocuparVagaCommand command, CancellationToken cancellationToken)
     {
         try
         {
-            var vagaSelecionado = await repositorioVaga.SelecionarRegistroPorIdAsync(command.Id);
+            var vagas = await repositorioVaga.SelecionarRegistrosAsync();
+            var vagaSelecionada = vagas.Find(v => v.Identificador.Equals(command.Identificador) && v.UsuarioId == tenantProvider.UsuarioId);
 
-            if (vagaSelecionado is null)
-                return Result.Fail(ResultadosErro.RegistroNaoEncontradoErro(command.Id));
+            if (vagaSelecionada is null)
+                return Result.Fail(ResultadosErro.RegistroNaoEncontradoErro($"Vaga não encontrada com o identificador: {command.Identificador}"));
 
-            if (vagaSelecionado.Ocupada)
-                return Result.Fail(ResultadosErro.ExclusaoBloqueadaErro("Não foi possivel excluir o vaga pois ainda contém um veiculo."));
+            if (!vagaSelecionada.Ocupada)
+                return Result.Fail(ResultadosErro.RequisicaoInvalidaErro("Não foi possivel remover um veiculo da vaga pois ela não contém um."));
 
-            await repositorioVaga.ExcluirAsync(command.Id);
+            vagaSelecionada.RemoverVeiculo();
 
             await unitOfWork.CommitAsync();
 
@@ -38,7 +41,7 @@ public class ExcluirVagaCommandHandler(
 
             await cache.RemoveAsync(cacheKey, cancellationToken);
 
-            var result = new ExcluirVagaResult();
+            var result = new DesocuparVagaResult();
 
             return Result.Ok(result);
         }
@@ -56,4 +59,3 @@ public class ExcluirVagaCommandHandler(
         }
     }
 }
-

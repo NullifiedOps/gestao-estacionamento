@@ -67,6 +67,72 @@ public class VagaController(IMediator mediator, IMapper mapper) : ControllerBase
         return NoContent();
     }
 
+    [HttpPost("estacionar")]
+    public async Task<ActionResult<EstacionarVagaResponse>> Estacionar(EstacionarVagaRequest request)
+    {
+        var command = mapper.Map<EstacionarVagaCommand>(request);
+
+        var result = await mediator.Send(command);
+
+        if (result.IsFailed)
+        {
+            if (result.HasError(e => e.HasMetadata("TipoErro", m => m.Equals("RequisicaoInvalida"))))
+            {
+                var errosDeValidacao = result.Errors
+                    .SelectMany(e => e.Reasons.OfType<IError>())
+                    .Select(e => e.Message);
+
+                return Conflict(errosDeValidacao);
+            }
+            
+            if (result.HasError(e => e.HasMetadata("TipoErro", m => m.Equals("RegistroNaoEncontradoErro"))))
+            {
+                var errosDeValidacao = result.Errors
+                    .SelectMany(e => e.Reasons.OfType<IError>())
+                    .Select(e => e.Message);
+
+                return BadRequest(errosDeValidacao);
+            }
+
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        return Ok();
+    }
+
+    [HttpPost("desocupar")]
+    public async Task<ActionResult<DesocuparVagaResponse>> Desocupar(DesocuparVagaRequest request)
+    {
+        var command = mapper.Map<DesocuparVagaCommand>(request);
+
+        var result = await mediator.Send(command);
+
+        if (result.IsFailed)
+        {
+            if (result.HasError(e => e.HasMetadata("TipoErro", m => m.Equals("RequisicaoInvalida"))))
+            {
+                var errosDeValidacao = result.Errors
+                    .SelectMany(e => e.Reasons.OfType<IError>())
+                    .Select(e => e.Message);
+
+                return Conflict(errosDeValidacao);
+            }
+
+            if (result.HasError(e => e.HasMetadata("TipoErro", m => m.Equals("RegistroNaoEncontradoErro"))))
+            {
+                var errosDeValidacao = result.Errors
+                    .SelectMany(e => e.Reasons.OfType<IError>())
+                    .Select(e => e.Message);
+
+                return BadRequest(errosDeValidacao);
+            }
+
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        return Ok();
+    }
+
     [HttpGet]
     public async Task<ActionResult<SelecionarVagasResponse>> SelecionarRegistros(
         [FromQuery] SelecionarVagasRequest? request,

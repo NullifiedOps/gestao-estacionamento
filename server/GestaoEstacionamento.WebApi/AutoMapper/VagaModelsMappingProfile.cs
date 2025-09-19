@@ -12,6 +12,12 @@ public class VagaModelsMappingProfile : Profile
         CreateMap<CadastrarVagaRequest, CadastrarVagaCommand>();
         CreateMap<CadastrarVagaResult, CadastrarVagaResponse>();
 
+        CreateMap<EstacionarVagaRequest, EstacionarVagaCommand>();
+        CreateMap<EstacionarVagaResult, EstacionarVagaResponse>();
+
+        CreateMap<DesocuparVagaRequest, DesocuparVagaCommand>();
+        CreateMap<DesocuparVagaResult, DesocuparVagaResponse>();
+
         CreateMap<(Guid, EditarVagaRequest), EditarVagaCommand>()
             .ConvertUsing(src => new EditarVagaCommand(
                 src.Item1,
