@@ -18,5 +18,6 @@ public record SelecionarVeiculosDto(
     string Nome,
     string Cpf,
     string Telefone,
-    int NumeroTicket
+    int NumeroTicket,
+    bool TicketEncerrado
 );

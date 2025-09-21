@@ -7,6 +7,8 @@ using GestaoEstacionamento.Core.Dominio.ModuloVeiculo;
 using GestaoEstacionamento.Infra.Orm.ModuloVeiculo;
 using GestaoEstacionamento.Core.Dominio.ModuloVaga;
 using GestaoEstacionamento.Infra.Orm.ModuloVaga;
+using GestaoEstacionamento.Core.Dominio.ModuloFaturamento;
+using GestaoEstacionamento.Infra.Orm.ModuloFaturamento;
 
 namespace GestaoEstacionamento.Infra.Orm;
 
@@ -16,6 +18,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IRepositorioVeiculo, RepositorioVeiculoEmOrm>();
         services.AddScoped<IRepositorioVaga, RepositorioVagaEmOrm>();
+        services.AddScoped<IRepositorioFaturamento, RepositorioFaturamentoEmOrm>();
 
         services.AddEntityFrameworkConfig(configuration);
 

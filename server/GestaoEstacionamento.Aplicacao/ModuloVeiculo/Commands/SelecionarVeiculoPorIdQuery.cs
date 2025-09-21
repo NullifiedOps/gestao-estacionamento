@@ -14,5 +14,6 @@ public record SelecionarVeiculoPorIdResult(
     string Nome,
     string Cpf,
     string Telefone,
-    int NumeroTicket
+    int NumeroTicket,
+    bool TicketEncerrado
 );

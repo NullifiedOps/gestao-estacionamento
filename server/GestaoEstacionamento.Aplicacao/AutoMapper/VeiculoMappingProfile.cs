@@ -22,7 +22,7 @@ public class VeiculoMappingProfile : Profile
                 ));
 
         CreateMap<Veiculo, CadastrarVeiculoResult>()
-            .ConstructUsing(src => new CadastrarVeiculoResult(src.Id, src.Ticket.Numero));
+            .ConvertUsing(src => new CadastrarVeiculoResult(src.Id, src.Ticket.Numero));
 
         CreateMap<EditarVeiculoCommand, Veiculo>();
         CreateMap<Veiculo, EditarVeiculoResult>();
@@ -37,7 +37,8 @@ public class VeiculoMappingProfile : Profile
                 src.Nome,
                 src.Cpf,
                 src.Telefone,
-                src.Ticket.Numero
+                src.Ticket.Numero,
+                src.Ticket.Encerrado
             ));
 
         CreateMap<Veiculo, SelecionarVeiculosDto>()
@@ -50,7 +51,8 @@ public class VeiculoMappingProfile : Profile
                 src.Nome,
                 src.Cpf,
                 src.Telefone,
-                src.Ticket.Numero
+                src.Ticket.Numero,
+                src.Ticket.Encerrado
             ));
 
         CreateMap<IEnumerable<Veiculo>, SelecionarVeiculosResult>()
