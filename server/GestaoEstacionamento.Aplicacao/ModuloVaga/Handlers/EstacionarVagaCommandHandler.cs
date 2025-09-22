@@ -44,6 +44,9 @@ public class EstacionarVagaCommandHandler(
             if (vagaOcupadaPeloVeiculo is not null)
                 return Result.Fail(ResultadosErro.RequisicaoInvalidaErro($"O veículo com placa {command.PlacaVeiculo} já está estacionado na vaga {vagaOcupadaPeloVeiculo.Identificador}."));
 
+            if (veiculoSelecionado.Ticket.Encerrado)
+                return Result.Fail(ResultadosErro.RequisicaoInvalidaErro($"O veículo não possui um ticket ativo."));
+
             vagaSelecionada.EstacionarVeiculo(veiculoSelecionado);
 
             await unitOfWork.CommitAsync();

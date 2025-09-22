@@ -37,7 +37,7 @@ public class EditarVagaCommandHandler(
 
         var registros = await repositorioVaga.SelecionarRegistrosAsync();
 
-        if (registros.Any(i => i.Identificador.Equals(command.Identificador)))
+        if (registros.Any(i => i.Identificador.Equals(command.Identificador) && i.Id != command.Id))
             return Result.Fail(ResultadosErro.RegistroDuplicadoErro("Já existe uma vaga registrada com este identificador."));
 
         try

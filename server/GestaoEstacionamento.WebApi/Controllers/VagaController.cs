@@ -47,7 +47,27 @@ public class VagaController(IMediator mediator, IMapper mapper) : ControllerBase
         var result = await mediator.Send(command);
 
         if (result.IsFailed)
-            return BadRequest();
+        {
+            if (result.HasError(e => e.HasMetadata("TipoErro", m => m.Equals("RequisicaoInvalida"))))
+            {
+                var errosDeValidacao = result.Errors
+                    .SelectMany(e => e.Reasons.OfType<IError>())
+                    .Select(e => e.Message);
+
+                return BadRequest(errosDeValidacao);
+            }
+
+            if (result.HasError(e => e.HasMetadata("TipoErro", m => m.Equals("RegistroDuplicado"))))
+            {
+                var errosDeValidacao = result.Errors
+                    .SelectMany(e => e.Reasons.OfType<IError>())
+                    .Select(e => e.Message);
+
+                return BadRequest(errosDeValidacao);
+            }
+
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
 
         var response = mapper.Map<EditarVagaResponse>(result.Value);
 
@@ -62,7 +82,18 @@ public class VagaController(IMediator mediator, IMapper mapper) : ControllerBase
         var result = await mediator.Send(command);
 
         if (result.IsFailed)
+        {
+            if (result.HasError(e => e.HasMetadata("TipoErro", m => m.Equals("ExclusaoBloqueada"))))
+            {
+                var errosDeValidacao = result.Errors
+                        .SelectMany(e => e.Reasons.OfType<IError>())
+                        .Select(e => e.Message);
+
+                return Conflict(errosDeValidacao);
+            }
+
             return BadRequest();
+        }
 
         return NoContent();
     }
@@ -94,7 +125,7 @@ public class VagaController(IMediator mediator, IMapper mapper) : ControllerBase
                 return BadRequest(errosDeValidacao);
             }
 
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return BadRequest();
         }
 
         return Ok();
@@ -127,7 +158,7 @@ public class VagaController(IMediator mediator, IMapper mapper) : ControllerBase
                 return BadRequest(errosDeValidacao);
             }
 
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return BadRequest();
         }
 
         return Ok();
